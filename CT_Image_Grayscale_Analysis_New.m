@@ -117,6 +117,13 @@ for aa = 1:(length(dir)-3)
                             
             % Isotonic image
             
+            dirFolder = dir('*.jpg');                 %get the selected file data
+            fileNames = {dirFolder.name};             %create a cell array of file names
+            for iFile = 1:numel(fileNames)            %loop over the file names
+                newName = sprintf('%02d.jpg',iFile);  %make the new name
+                movefile(fileNames{iFile},newName);   %rename the file
+            end 
+            
             filename_designation = char(strcat('Enter isotonic image',{' '},num2str(bb),{' '},'of',{' '},num2str(Number_Slices),':',{' '}));
             filename = input(filename_designation,'s');
             
