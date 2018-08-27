@@ -290,6 +290,21 @@ for aa = 1:(length(dir)-14)
 %                       normplot_x = norm_x_
 %                       normplot_y = 
 %                    
+
+    if m_line == 0 %plots horizontal lines
+             plot(mid_x_test,mid_y_test, 'o') %plots a circle at the midpoint
+               hold on
+               x_range_horizontal = [1:520];
+               y_range_horizontal = (line_limit-mid_y_test)+mid_y_test;
+               w = improfile(simul_hypo, x_range_horizontal, y_range_horizontal, 520);
+               z = w(:,1);
+                   for index = 1:length(z)
+                        if z(index)~=0
+                           plot(x_range_horizontal(index), y_range_horizontal(index),'-.ro')
+                           hold on
+                        else 
+                        end 
+                   end
             end
         end
 end
