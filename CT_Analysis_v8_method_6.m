@@ -172,10 +172,10 @@ for aa = 1:(length(dir)-14)
             y_next = 0
             line_limit = 512
             
-            n = 20; %only applies every nth value to loop: if you want to include every value, set n = 1 
+            n = 10; %only applies every nth value to loop: if you want to include every value, set n = 1 
             new_xrange = x_SH(1:n:end); %new array of values that only has every nth value of x_SH 
             new_yrange = y_SH(1:n:end); %new array of values that only has every nth value of y_SH
-           
+            
             for idx = 1:length(new_xrange)-1 %NOTE: -1 gets rid of the index error
                 x_first = new_xrange(idx);   %x_first is the x-coordinate of a point on the boundary
                 x_next = new_xrange(idx+1);  %x_next is the x-coordinate of the proceeding point on the boundary
@@ -195,30 +195,42 @@ for aa = 1:(length(dir)-14)
                    norm_x_1 = mid_x_test-mid_x_test; %x-coordinate of the cyan endpoint (NOTE: sets x value as left border)
                    norm_x_2 = mid_x_test+(line_limit-mid_x_test); %x-coordinate of the dark blue endpoint
                    norm_y_1 = (new_m)*(norm_x_1)+intercept; %y-coordinate of the cyan endpoint using equation of the perpendicular line (y = mx+b)
-                   norm_y_2 = (new_m)*(norm_x_2)+intercept; %y-coordinate of the dark blue endpoint 
+                   norm_y_2 = (new_m)*(norm_x_2)+intercept; 
  
+                                   
                    plot([x_first,x_next],[y_first,y_next],'r') %plots the red line segment connecting the two points
                    hold on
                             
-                   max_x = 56
+                   max_x = 512
                    x_range = [1:max_x]; %set of x-coordinate values 
+                   mid_x_test_repeat = [mid_x_test mid_x_test mid_x_test mid_x_test];
+                   x_range_vertical = repmat(mid_x_test_repeat,1,128);
                    y_range = new_m*(x_range)+intercept;%set of y-coordinate values based on x-coordinate values and corresponding perpendicular slope
-                              
-                   y_range(isnan(y_range))=0; %replaces NaN values with 0
-                   y_range(isinf(y_range))=0; %replaces inf values with 0
+                   y_range_vertical = new_m*(x_range_vertical)+intercept;
+                   
+                   y_range(isnan(y_range))=0;
+                   y_range(isinf(y_range))=0;
                                
                    w = improfile(simul_hypo, x_range, y_range, max_x); %finds intensity of pixel corresponding to x/y coordinate
-                   z = w(:,1); %creates an array z of intensity values 
+                   z = w(:,1); %creates an array of intensity values 
                               
                    for index_new = 1:max_x
                        if z(index_new)~=0 %if the intensity value of the coordinate is not 0 (black), then plot a red dot 
                           plot(x_range(index_new), y_range(index_new),'-.ro') %plots a red dot along the perpendicular line that satisfies the conditions
                           hold on 
-                          plot(mid_x_test(index_new),mid_y_test(index_new), '*') %plots a circle at the midpoint
+                          plot(mid_x_test(1:n:end),mid_y_test(1:n:end), '*') %plots a circle at the midpoint
+%                        elseif m_line(index_new)==0
+%                           w_vertical = improfile(simul_hypo, x_range_vertical, y_range_vertical, max_x);
+%                           z = w_vertical(:,1);
+%                           plot(x_range_vertical(index_new), y_range_vertical(index_new),'-.ro')
+%                           hold on
+%                           plot(mid_x_test(1:n:end),mid_y_test(1:n:end), '*')
                        else
-                       end 
-                      
-                   end 
+                       end
+                    end 
+                   
+                   
+               
             end
             
             %line where Solomon has code related to only plotting the
